@@ -16,37 +16,35 @@ Les données utilisées sont des données de RNA-seq bulk (paired-end) au format
 Les données brutes ne sont pas incluses dans ce dépôt et sont stockées sur le cluster GenoToul.
 
 ## Transfert des données
-
-Les fichiers RNA-seq ont été transférés depuis un stockage local vers le cluster GenoToul à l’aide de la commande `rsync`.
+Les fichiers RNA-seq ont été transférés depuis un stockage local vers le cluster GenoToul à l’aide de la commande suivante :
 
 ```bash
 rsync -avhz --progress *.fastq.gz \
 neddassouqu@genobioinfo.toulouse.inrae.fr:/home/neddassouqu/work/raw_data/
+```
+Pipeline d’analyse
 
-
-## Pipeline d’analyse
 Le pipeline comprend les étapes suivantes :
 
-1. Contrôle qualité des lectures (FastQC)  
-2. Alignement sur le génome de référence (STAR)  
-3. Quantification des lectures (featureCounts)  
-4. Analyse différentielle (DESeq2)  
-5. Analyses fonctionnelles (GSEA, IPA)  
+Contrôle qualité des lectures (FastQC)
+Alignement sur le génome de référence (STAR)
+Quantification des lectures (featureCounts)
+Analyse différentielle (DESeq2)
+Analyses fonctionnelles (GSEA, IPA)
+Organisation du projet
 
-## Organisation du projet
+scripts/ Scripts bash pour le pipeline d’analyse
+results/ Résultats (non versionnés)
+data/ Données (non incluses dans le dépôt)
 
-scripts/        Scripts bash pour le pipeline d’analyse  
-results/        Résultats (non versionnés)  
-data/           Données (non incluses dans le dépôt)  
+Outils utilisés
+FastQC
+STAR
+featureCounts
+DESeq2 (R)
+GSEA / IPA
+Auteur
 
-## Outils utilisés
-- FastQC  
-- STAR  
-- featureCounts  
-- DESeq2 (R)  
-- GSEA / IPA  
-
-## Auteur
-Noufissa Eddassouqui  
-Stage M1 Bioinformatique  
+Noufissa Eddassouqui
+Stage M1 Bioinformatique
 INFINITY – INSERM UMR1291, Toulouse
