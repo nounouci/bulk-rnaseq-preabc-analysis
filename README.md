@@ -13,7 +13,16 @@ Il vise à analyser des données de RNA-seq bulk afin de caractériser les diff�
 ## Données
 Les données utilisées sont des données de RNA-seq bulk (paired-end) au format FASTQ (.fastq.gz), générées et hébergées sur la plateforme GenoToul.
 
-Les données brutes ne sont pas incluses dans ce dépôt.
+Les données brutes ne sont pas incluses dans ce dépôt et sont stockées sur le cluster GenoToul.
+
+## Transfert des données
+
+Les fichiers RNA-seq ont été transférés depuis un stockage local vers le cluster GenoToul à l’aide de la commande `rsync`.
+
+```bash
+rsync -avhz --progress *.fastq.gz \
+neddassouqu@genobioinfo.toulouse.inrae.fr:/home/neddassouqu/work/raw_data/
+
 
 ## Pipeline d’analyse
 Le pipeline comprend les étapes suivantes :
