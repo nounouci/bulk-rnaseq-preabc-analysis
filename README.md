@@ -11,9 +11,16 @@ Il vise à analyser des données de RNA-seq bulk afin de caractériser les diff�
 - Réaliser des analyses d’enrichissement fonctionnel (GSEA, IPA)  
 
 ## Données
-Les données utilisées sont des données de RNA-seq bulk (paired-end) au format FASTQ (.fastq.gz), générées et hébergées sur la plateforme GenoToul.
 
-Les données brutes ne sont pas incluses dans ce dépôt et sont stockées sur le cluster GenoToul.
+Les données analysées correspondent à des données de RNA-seq bulk (paired-end) au format FASTQ (.fastq.gz).
+
+Les fichiers bruts étaient initialement stockés sur le réseau interne de l’équipe (INSERM) au chemin suivant :
+
+\\infinity-share.inserm.lan\INFY_Eq_Guery\Public\sequencing_CRCT P11 librairies\PreABC_FO_SLE
+
+Ils ont ensuite été transférés vers le cluster de calcul GenoToul pour analyse.
+
+Les données ne sont pas incluses dans ce dépôt.
 
 ## Transfert des données
 Les fichiers RNA-seq ont été transférés depuis un stockage local vers le cluster GenoToul à l’aide de la commande suivante :
