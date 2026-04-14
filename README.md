@@ -62,25 +62,38 @@ Les fichiers FASTQ ont été transférés vers le cluster GenoToul dans le répe
 ```bash
 nohup rsync -avh --partial --append-verify --progress --ignore-existing *.fastq.gz \
 neddassouqu@genobioinfo.toulouse.inrae.fr:/home/neddassouqu/work/raw_data/ \
-> rsync.log 2>&1 &  ```
+> rsync.log 2>&1 &
+```
 
-Explication des options
-nohup : exécute la commande en arrière-plan sans interruption
-rsync : outil de transfert de fichiers
--a : mode archive
--v : mode verbeux
--h : tailles lisibles
---partial : conserve les fichiers incomplets
---append-verify : reprend les transferts interrompus avec vérification
---progress : affiche la progression
---ignore-existing : ignore les fichiers déjà copiés
-> rsync.log 2>&1 & : redirige la sortie vers un log et lance en arrière-plan
-Suivi du transfert
+### Explication des options
+
+- `nohup` : exécute la commande en arrière-plan sans interruption  
+- `rsync` : outil de transfert de fichiers  
+- `-a` : mode archive (préserve permissions et structure)  
+- `-v` : mode verbeux (affichage détaillé)  
+- `-h` : affichage lisible des tailles  
+- `--partial` : conserve les fichiers incomplets en cas d’interruption  
+- `--append-verify` : reprend les transferts interrompus avec vérification  
+- `--progress` : affiche la progression du transfert  
+- `--ignore-existing` : ignore les fichiers déjà copiés  
+- `> rsync.log 2>&1 &` : redirige la sortie vers un fichier log et lance le processus en arrière-plan  
+
+---
+
+### Suivi du transfert
+
+```bash
 tail -f rsync.log
+```
 
 Permet de suivre la progression en temps réel.
 
-Vérification des fichiers
+---
+
+### Vérification des fichiers
+
+```bash
 ls ~/work/raw_data
+```
 
 Permet de vérifier que les fichiers ont bien été transférés.
