@@ -97,35 +97,109 @@ ls ~/work/raw_data
 ```
 
 Permet de vérifier que les fichiers ont bien été transférés.
+
+
+
 ## Vérification de l’intégrité des données (MD5)
 
-Après le transfert des fichiers FASTQ, l’intégrité des données a été vérifiée à l’aide des checksums MD5 fournis.
-
-Le fichier `_checksum.md5`, contenant les empreintes MD5 associées aux fichiers, a été utilisé.
+Après le transfert des fichiers FASTQ vers le cluster, il est indispensable de vérifier que les fichiers n’ont pas été altérés ou corrompus. Cette vérification repose sur l’utilisation de checksums MD5.
 
 ---
 
-### Préparation du fichier de vérification
+## Principe
 
-Étant donné que seuls certains fichiers ont été transférés, un sous-ensemble des checksums a été généré :
+Un checksum MD5 est une empreinte numérique unique calculée à partir du contenu d’un fichier.
+
+* Si le fichier est identique → le checksum est identique
+* Si le fichier est modifié ou incomplet → le checksum est différent
+
+La plateforme de séquençage fournit généralement un fichier contenant les checksums de référence.
+
+---
+
+## Fichiers disponibles
+
+Deux fichiers de checksum peuvent être présents :
+
+* `_check.md5` : contient les chemins complets (avec dossiers)
+* `_checksum.md5` : contient uniquement les noms des fichiers
+
+Dans ce projet, les fichiers FASTQ ont été copiés sans l’arborescence d’origine, il est donc nécessaire d’utiliser `_checksum.md5`.
+
+---
+
+## Procédure
+
+### 1. Lister les fichiers présents
 
 ```bash
 ls *.fastq.gz > mes_fichiers.txt
+```
+
+Cette commande crée un fichier contenant la liste des FASTQ présents dans le répertoire de travail.
+
+---
+
+### 2. Extraire les checksums correspondants
+
+```bash
 grep -Ff mes_fichiers.txt _checksum.md5 > subset.md5
 ```
 
+Cette étape permet de filtrer le fichier de checksum pour ne conserver que les entrées correspondant aux fichiers effectivement présents.
 
-### Vérification des fichiers
+---
+
+### 3. Vérifier l’intégrité des fichiers
+
 ```bash
 md5sum -c subset.md5
 ```
-Tous les fichiers utilisés pour l’analyse sont valides (OK), confirmant l’absence de corruption lors du transfert.
-### Remarque
 
-Le fichier _check.md5, contenant des chemins complets, n’a pas été utilisé car il ne correspondait pas à l’organisation loc
+---
+
+## Interprétation des résultats
+
+Exemple de sortie :
+
+```
+P11-19_S19_L001_R1_001.fastq.gz: OK
+P11-19_S19_L001_R2_001.fastq.gz: OK
+...
+```
+
+* `OK` : le fichier est intact
+* `FAILED` : le fichier est corrompu ou incomplet
+
+---
+
+## Gestion des erreurs
+
+En cas de fichiers `FAILED`, les fichiers concernés doivent être supprimés puis retransférés.
+
+Exemple :
+
+```bash
+rm P11-25_S25_L001_R2_001.fastq.gz
+rm P11-25_S25_L002_R1_001.fastq.gz
+```
+
+Après retransfert, la vérification MD5 doit être relancée.
+
+---
+
+## Résultat final
+
+Une fois tous les fichiers validés, l’ensemble des FASTQ peut être utilisé en toute confiance pour les analyses downstream (FastQC, alignement, quantification).
+
+---
+
+## Remarque
+
+Cette étape est critique car toute erreur dans les fichiers FASTQ peut compromettre l’ensemble de l’analyse RNA-seq.
 
 
-## Échantillons SLE utilisés pour l’analyse RNA-seq
+###  Échantillons SLE utilisés pour l’analyse RNA-seq
 
 Les analyses ont été réalisées sur des lymphocytes B issus de souris SLE, comprenant deux conditions expérimentales : Pré-ABC et Neg.  
 Chaque paire d’échantillons correspond à une même souris, permettant une comparaison directe entre les deux conditions.
@@ -146,3 +220,242 @@ Le tableau ci-dessous présente les informations associées aux échantillons ut
 | SLE 1671 | Neg     | Neg                   | oui              | 500000             | 40             | P11-24       |
 | SLE 2142 | Pré-ABC | Pré-ABC               | oui              | 259000             | 43             | P11-25       |
 | SLE 2142 | Neg     | Neg                   | oui              | 500000             | 44             | P11-26       |
+
+````markdown
+## Structure et compréhension des fichiers FASTQ
+
+Les fichiers utilisés dans ce projet sont au format **FASTQ compressé (`.fastq.gz`)**, qui est le format standard pour les données de séquençage haut débit.
+
+---
+
+## Principe du format FASTQ
+
+Un fichier FASTQ contient les séquences lues par le séquenceur ainsi que leur qualité.  
+Chaque read est décrit sur **4 lignes** :
+
+```text
+@SEQ_ID
+GATCGGAAGAGCACACGTCTGAACTCCAGTCAC
++
+IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+````
+
+* Ligne 1 : identifiant de la séquence
+* Ligne 2 : séquence nucléotidique (A, T, G, C)
+* Ligne 3 : séparateur (`+`)
+* Ligne 4 : qualité des bases (scores Phred encodés en ASCII)
+
+---
+
+## Compression
+
+Les fichiers sont compressés au format `.gz` pour réduire leur taille :
+
+* Avantage : gain de stockage
+* Les outils bioinformatiques (FastQC, STAR, etc.) peuvent lire directement les fichiers compressés
+
+---
+
+## Structure des noms de fichiers
+
+Exemple :
+
+```
+P11-19_S19_L001_R1_001.fastq.gz
+```
+
+Décomposition :
+
+* `P11-19` : identifiant de l’échantillon
+* `S19` : numéro interne de sample
+* `L001` : lane de séquençage
+* `R1` : read forward
+* `001` : numéro technique
+
+---
+
+## Données paired-end
+
+Les données sont en **paired-end**, ce qui signifie que chaque fragment est séquencé des deux côtés :
+
+* `R1` : première lecture
+* `R2` : seconde lecture
+
+Ces deux fichiers doivent toujours être utilisés ensemble dans les analyses.
+
+---
+
+## Notion de lane
+
+Un même échantillon peut être séquencé sur plusieurs lanes (ex : `L001`, `L002`) :
+
+* Cela permet d’augmenter la profondeur de séquençage
+* Les données issues de différentes lanes peuvent être :
+
+  * soit utilisées séparément
+  * soit concaténées avant l’analyse
+
+---
+
+## Exemple concret dans ce projet
+
+Pour un échantillon donné :
+
+```
+P11-19_S19_L001_R1_001.fastq.gz
+P11-19_S19_L001_R2_001.fastq.gz
+P11-19_S19_L002_R1_001.fastq.gz
+P11-19_S19_L002_R2_001.fastq.gz
+```
+
+Cela correspond à :
+
+* 2 lanes (L001 et L002)
+* 2 reads (R1 et R2)
+
+---
+
+## Utilisation dans l’analyse
+
+Deux stratégies sont possibles :
+
+### 1. Utilisation d’une seule lane (test)
+
+Permet de tester rapidement le pipeline :
+
+* plus rapide
+* moins de données
+
+---
+
+### 2. Fusion des lanes (analyse finale)
+
+Concaténation des fichiers :
+
+```bash
+cat *_L001_R1_*.fastq.gz *_L002_R1_*.fastq.gz > sample_R1.fastq.gz
+cat *_L001_R2_*.fastq.gz *_L002_R2_*.fastq.gz > sample_R2.fastq.gz
+```
+
+* permet d’utiliser toutes les données
+* recommandé pour l’analyse finale
+
+---
+
+## Remarque
+
+Il est important de conserver la cohérence entre les fichiers :
+
+* toujours associer R1 avec R2
+* ne pas mélanger les échantillons
+* vérifier l’intégrité avec MD5 avant toute analyse
+
+```
+```
+
+---
+
+````
+## Contrôle qualité des données (FastQC)
+
+Une analyse de qualité des reads a été réalisée à l’aide de l’outil FastQC sur un sous-ensemble de fichiers FASTQ afin de valider le bon fonctionnement du pipeline.
+
+---
+
+## Soumission du job sur le cluster
+
+Le calcul a été exécuté via un script SLURM avec la commande :
+
+```bash
+sbatch fastqc_job.sh
+````
+
+---
+
+## Suivi du job
+
+Le job a été exécuté sur un nœud de calcul :
+
+```bash
+squeue -u $USER
+```
+
+Statut observé :
+
+* `R` : job en cours d’exécution
+* exécution sur le nœud `n008`
+
+---
+
+## Logs d’exécution
+
+### Fichier de sortie standard
+
+```bash
+cat fastqc_35419443.log
+```
+
+Contenu :
+
+```
+Début FastQC : Tue Apr 14 15:09:59 CEST 2026
+Analysis complete for P11-19_S19_L001_R1_001.fastq.gz
+Analysis complete for P11-19_S19_L001_R2_001.fastq.gz
+Analysis complete for P11-20_S20_L001_R1_001.fastq.gz
+Analysis complete for P11-20_S20_L001_R2_001.fastq.gz
+Fin FastQC : Tue Apr 14 15:12:09 CEST 2026
+```
+
+---
+
+### Fichier d’erreur (suivi de progression)
+
+```bash
+cat fastqc_35419443.err
+```
+
+Ce fichier contient la progression de l’analyse :
+
+```
+Started analysis of ...
+Approx 5% complete ...
+...
+Approx 95% complete ...
+```
+
+Cela confirme que FastQC a traité les fichiers correctement.
+
+---
+
+## Résultat
+
+* Les 4 fichiers FASTQ test ont été analysés avec succès
+* Durée d’exécution : environ 2 minutes
+* Aucun message d’erreur critique
+
+Les rapports FastQC sont disponibles dans le dossier de sortie :
+
+```
+~/work/fastqc/
+```
+
+---
+
+## Conclusion
+
+Cette étape valide :
+
+* le bon fonctionnement de FastQC sur le cluster
+* la configuration correcte du script SLURM
+* la disponibilité des données FASTQ
+
+Le pipeline peut maintenant être appliqué à l’ensemble des échantillons.
+
+```
+
+---
+```
+
+
+
+
