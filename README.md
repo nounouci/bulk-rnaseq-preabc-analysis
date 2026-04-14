@@ -458,4 +458,91 @@ Le pipeline peut maintenant être appliqué à l’ensemble des échantillons.
 
 
 
+---
+
+````
+## Agrégation des résultats de qualité (MultiQC)
+
+Après l’analyse individuelle des fichiers FASTQ avec FastQC, une étape d’agrégation des résultats a été réalisée à l’aide de l’outil **MultiQC**.
+
+---
+
+## Principe
+
+MultiQC permet de regrouper les rapports issus de FastQC pour plusieurs échantillons en un seul fichier interactif.
+
+Cela permet :
+
+- une visualisation globale de la qualité des données
+- une comparaison entre échantillons
+- une détection rapide des anomalies communes
+
+---
+
+## Script SLURM utilisé
+
+```bash
+#!/bin/bash
+#SBATCH --job-name=multiqc
+#SBATCH --output=multiqc_%j.log
+#SBATCH --error=multiqc_%j.err
+#SBATCH --partition=workq
+#SBATCH --cpus-per-task=2
+#SBATCH --mem=4G
+#SBATCH --time=01:00:00
+
+echo "Début MultiQC : $(date)"
+
+module load bioinfo/MultiQC
+
+cd ~/work/fastqc
+
+multiqc . -o ../multiqc
+
+echo "Fin MultiQC : $(date)"
+````
+
+---
+
+## Résultat
+
+Un rapport HTML unique a été généré :
+
+```
+~/work/multiqc/multiqc_report.html
+```
+
+Ce rapport permet d’explorer les résultats de qualité de l’ensemble des échantillons.
+
+---
+
+## Interprétation des résultats
+
+Les principales observations sont les suivantes :
+
+* Nombre de reads par échantillon : ~15 millions → cohérent
+* Contenu en GC : ~50% → conforme aux attentes biologiques
+* Duplication : ~30–38% → acceptable en RNA-seq
+* Présence d’adapters : détectée (notamment sur R2)
+* Qualité des bases : diminution en fin de reads
+
+---
+
+## Conclusion
+
+L’analyse MultiQC met en évidence :
+
+* une bonne qualité globale des données
+* la présence d’adapters et de bases de faible qualité
+
+Ces observations justifient la réalisation d’une étape de trimming avant l’alignement.
+
+---
+
+````
+
+
+
+
+
 
