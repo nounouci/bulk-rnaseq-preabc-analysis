@@ -123,3 +123,26 @@ Tous les fichiers utilisés pour l’analyse sont valides (OK), confirmant l’a
 ### Remarque
 
 Le fichier _check.md5, contenant des chemins complets, n’a pas été utilisé car il ne correspondait pas à l’organisation loc
+
+
+## Échantillons SLE utilisés pour l’analyse RNA-seq
+
+Les analyses ont été réalisées sur des lymphocytes B issus de souris SLE, comprenant deux conditions expérimentales : Pré-ABC et Neg.  
+Chaque paire d’échantillons correspond à une même souris, permettant une comparaison directe entre les deux conditions.
+
+Le tableau ci-dessous présente les informations associées aux échantillons utilisés.
+
+---
+
+## Table des échantillons SLE (PreABC vs Neg)
+
+| Souris   | Condition | Sample names          | ARN extrait & QC | Nombre de cellules | Échantillon n° | ID librairie |
+|---------|----------|-----------------------|------------------|--------------------|----------------|--------------|
+| SLE 1567 | Pré-ABC | Pré-ABC CD11c+CD11b+ | oui              | 312000             | 19             | P11-19       |
+| SLE 1567 | Neg     | Neg                   | oui              | 500000             | 20             | P11-20       |
+| SLE 1569 | Pré-ABC | Pré-ABC               | oui              | 462000             | 21             | P11-21       |
+| SLE 1569 | Neg     | Neg                   | oui              | 500000             | 22             | P11-22       |
+| SLE 1671 | Pré-ABC | Pré-ABC               | oui              | 186000             | 39             | P11-23       |
+| SLE 1671 | Neg     | Neg                   | oui              | 500000             | 40             | P11-24       |
+| SLE 2142 | Pré-ABC | Pré-ABC               | oui              | 259000             | 43             | P11-25       |
+| SLE 2142 | Neg     | Neg                   | oui              | 500000             | 44             | P11-26       |
