@@ -62,7 +62,8 @@ Les fichiers FASTQ ont été transférés vers le cluster GenoToul dans le répe
 ```bash
 nohup rsync -avh --partial --append-verify --progress --ignore-existing *.fastq.gz \
 neddassouqu@genobioinfo.toulouse.inrae.fr:/home/neddassouqu/work/raw_data/ \
-> rsync.log 2>&1 &
+> rsync.log 2>&1 &  ```
+
 Explication des options
 nohup : exécute la commande en arrière-plan sans interruption
 rsync : outil de transfert de fichiers
