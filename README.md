@@ -97,3 +97,29 @@ ls ~/work/raw_data
 ```
 
 Permet de vérifier que les fichiers ont bien été transférés.
+## Vérification de l’intégrité des données (MD5)
+
+Après le transfert des fichiers FASTQ, l’intégrité des données a été vérifiée à l’aide des checksums MD5 fournis.
+
+Le fichier `_checksum.md5`, contenant les empreintes MD5 associées aux fichiers, a été utilisé.
+
+---
+
+### Préparation du fichier de vérification
+
+Étant donné que seuls certains fichiers ont été transférés, un sous-ensemble des checksums a été généré :
+
+```bash
+ls *.fastq.gz > mes_fichiers.txt
+grep -Ff mes_fichiers.txt _checksum.md5 > subset.md5
+```
+
+
+### Vérification des fichiers
+```bash
+md5sum -c subset.md5
+```
+Tous les fichiers utilisés pour l’analyse sont valides (OK), confirmant l’absence de corruption lors du transfert.
+### Remarque
+
+Le fichier _check.md5, contenant des chemins complets, n’a pas été utilisé car il ne correspondait pas à l’organisation loc
