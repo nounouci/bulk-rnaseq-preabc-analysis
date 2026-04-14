@@ -70,10 +70,10 @@ rsync : outil de transfert de fichiers
 -v : mode verbeux
 -h : tailles lisibles
 --partial : conserve les fichiers incomplets
---append-verify : reprend les transferts interrompus
+--append-verify : reprend les transferts interrompus avec vérification
 --progress : affiche la progression
 --ignore-existing : ignore les fichiers déjà copiés
-> rsync.log 2>&1 & : envoie la sortie dans un log et lance en arrière-plan
+> rsync.log 2>&1 & : redirige la sortie vers un log et lance en arrière-plan
 Suivi du transfert
 tail -f rsync.log
 
@@ -82,4 +82,4 @@ Permet de suivre la progression en temps réel.
 Vérification des fichiers
 ls ~/work/raw_data
 
-Permet de vérifier que les fichiers ont bien été transférés
+Permet de vérifier que les fichiers ont bien été transférés.
