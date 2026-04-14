@@ -1,4 +1,32 @@
-✅ VERSION CORRIGÉE (à copier tel quel)
+# Bulk RNA-seq analysis – PreABC vs FO B cells
+
+## Contexte
+
+Ce projet a été réalisé dans le cadre d’un stage de bioinformatique au sein de l’unité INFINITY (INSERM UMR1291, Toulouse).
+
+L’objectif de ce travail est d’analyser des données de RNA-seq bulk afin de comparer les profils transcriptionnels entre différentes populations de lymphocytes B, en particulier les populations PreABC et FO.
+
+Cette analyse s’inscrit dans un contexte d’étude des mécanismes moléculaires régulant la différenciation et la fonction des cellules B, avec un intérêt particulier pour l’expression génique et les signatures transcriptionnelles spécifiques.
+
+---
+
+## Objectifs
+
+- Identifier les gènes différentiellement exprimés (DEG) entre les populations PreABC et FO  
+- Décrire les signatures transcriptomiques spécifiques à chaque population  
+- Étudier l’expression des gènes liés au chromosome X  
+- Réaliser des analyses d’enrichissement fonctionnel (GSEA, IPA)  
+
+---
+
+## Données
+
+Les données utilisées correspondent à du RNA-seq bulk paired-end (Illumina), au format compressé `.fastq.gz`.
+
+### Localisation initiale
+
+Les fichiers étaient initialement stockés sur un serveur interne :
+
 ### Organisation des fichiers
 
 Chaque échantillon est représenté par deux fichiers :
