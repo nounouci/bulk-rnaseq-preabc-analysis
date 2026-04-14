@@ -543,6 +543,125 @@ Ces observations justifient la réalisation d’une étape de trimming avant l�
 
 
 
+---
+
+````
+## Trimming des reads (TrimGalore)
+
+Suite aux résultats obtenus avec FastQC et MultiQC, plusieurs anomalies ont été identifiées dans les données :
+
+- Présence de séquences d’adapters (notamment dans les reads R2)
+- Diminution de la qualité des bases en fin de reads (extrémité 3')
+- Variations du contenu en bases le long des reads
+
+Afin de corriger ces problèmes et d’améliorer la qualité des données, une étape de trimming a été mise en place.
+
+---
+
+## Objectifs du trimming
+
+Le trimming permet de :
+
+- supprimer les séquences d’adapters
+- éliminer les bases de faible qualité
+- retirer les reads trop courts après nettoyage
+
+Cette étape est essentielle pour améliorer :
+
+- la qualité de l’alignement
+- la précision de la quantification
+- la fiabilité des analyses downstream
+
+---
+
+## Outils utilisés
+
+Le trimming est réalisé avec :
+
+- **TrimGalore (v0.6.10)**  
+- reposant sur **Cutadapt (v5.0)**
+
+---
+
+## Script SLURM utilisé
+
+```bash
+#!/bin/bash
+#SBATCH --job-name=trim_galore
+#SBATCH --output=trim_%j.log
+#SBATCH --error=trim_%j.err
+#SBATCH --partition=workq
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=8G
+#SBATCH --time=02:00:00
+
+echo "Début trimming : $(date)"
+
+module load bioinfo/Cutadapt/5.0
+module load bioinfo/TrimGalore/0.6.10
+
+cd ~/work/raw_data
+mkdir -p ../trimmed
+
+trim_galore \
+  --paired \
+  --quality 20 \
+  --length 20 \
+  --cores 4 \
+  -o ../trimmed \
+  P11-19_S19_L001_R1_001.fastq.gz P11-19_S19_L001_R2_001.fastq.gz \
+  P11-20_S20_L001_R1_001.fastq.gz P11-20_S20_L001_R2_001.fastq.gz
+
+echo "Fin trimming : $(date)"
+````
+
+---
+
+## Paramètres utilisés
+
+* `--paired` : données paired-end (R1/R2)
+* `--quality 20` : suppression des bases avec une qualité inférieure à Q20
+* `--length 20` : suppression des reads trop courts (< 20 bp)
+* `--cores 4` : utilisation de 4 threads
+* `-o` : dossier de sortie des fichiers trimmed
+
+---
+
+## Statut de l’analyse
+
+Le trimming est actuellement en cours d’exécution sur le cluster de calcul.
+
+Les fichiers générés seront :
+
+```
+*_val_1.fq.gz
+*_val_2.fq.gz
+```
+
+ainsi que des rapports :
+
+```
+*_trimming_report.txt
+```
+
+---
+
+## Étape suivante
+
+Une fois le trimming terminé, un nouveau contrôle qualité sera réalisé :
+
+* FastQC sur les fichiers trimmed
+* agrégation des résultats avec MultiQC
+
+Cela permettra de vérifier :
+
+* la suppression des adapters
+* l’amélioration de la qualité des reads
+* la qualité globale des données avant alignement
+
+```
+```
+
 
 
 
