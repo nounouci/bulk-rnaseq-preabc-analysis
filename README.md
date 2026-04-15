@@ -187,8 +187,7 @@ rm P11-25_S25_L002_R1_001.fastq.gz
 Après retransfert, la vérification MD5 doit être relancée.
 
 ---
-![Pipeline](https://github.com/nounouci/bulk-rnaseq-preabc-analysis/blob/4e0bcc50c63d3a51d32e3a5d6c7ed35b37736fa4/Capture%20d%27%C3%A9cran%202026-04-14%20120421.png?raw=true)
-## Résultat final
+<img src="https://github.com/nounouci/bulk-rnaseq-preabc-analysis/blob/4e0bcc50c63d3a51d32e3a5d6c7ed35b37736fa4/Capture%20d%27%C3%A9cran%202026-04-14%20120421.png?raw=true" width="500">## Résultat final
 
 Une fois tous les fichiers validés, l’ensemble des FASTQ peut être utilisé en toute confiance pour les analyses downstream (FastQC, alignement, quantification).
 
