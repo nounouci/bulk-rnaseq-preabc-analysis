@@ -6,24 +6,23 @@ Ce dépôt documente une analyse RNA-seq bulk réalisée dans le cadre d’un st
 
 ## Données
 
-Les données correspondent à du RNA-seq bulk paired-end Illumina. Les fichiers FASTQ, BAM, RDS et autres fichiers volumineux ne sont pas inclus dans ce dépôt.
+Les données correspondent à du RNA-seq bulk paired-end Illumina. L’analyse utilise 8 échantillons :
 
-L’analyse utilise 8 échantillons :
 - 4 échantillons PreABC
 - 4 échantillons Neg
-- appariés par souris
+- échantillons appariés par souris
 
-## Organisation du pipeline
+Les fichiers FASTQ, BAM, objets R volumineux et sorties intermédiaires générées par les outils ne sont pas versionnés dans Git. Ils doivent être conservés sur un espace de stockage adapté et peuvent être régénérés à partir du pipeline.
 
-Le workflow comprend les étapes suivantes :
+## Workflow d’analyse
 
-1. Vérification MD5 des fichiers FASTQ
+1. Vérification MD5 des FASTQ
 2. Contrôle qualité initial avec FastQC et MultiQC
-3. Trimming des adapters et bases de faible qualité avec Trim Galore
+3. Trimming avec Trim Galore
 4. Suppression des queues polyA/polyT avec Cutadapt
-5. Nouveau contrôle qualité après nettoyage
-6. Construction d’un index STAR adapté aux reads 150 bp
-7. Alignement des reads avec STAR
+5. Contrôle qualité après nettoyage
+6. Construction d’un index STAR adapté aux reads de 150 bp
+7. Alignement avec STAR
 8. Contrôle qualité des BAM avec Qualimap et RSeQC
 9. Quantification transcriptomique avec Salmon
 10. Import des quantifications avec tximport
@@ -39,17 +38,21 @@ La quantification Salmon directe sur l’index gentrome/decoy présente un taux 
 
 L’analyse finale retenue repose sur STAR-Salmon puis DESeq2 avec un design apparié.
 
-## Organisation du dépôt
+## Organisation recommandée du dépôt
 
 ```text
-scripts/
-  Scripts Bash, R et Python utilisés pour le pipeline
+bulk-rnaseq-preabc-analysis/
+├── README.md
+├── LICENSE
+├── .gitignore
+├── scripts/          # Bash, R et Python du pipeline
+├── docs/             # documentation et notes de workflow
+├── figures/          # quelques figures finales utiles
+└── results_summary/  # petites tables récapitulatives
+```
 
-docs/
-  Notes explicatives et documentation du workflow
+Les gros résultats intermédiaires (FastQC, MultiQC, STAR, Qualimap, RSeQC, Salmon, nf-core, etc.) ne doivent pas être commités sous forme d’archives ZIP.
 
-figures_for_report/
-  Figures ou schémas destinés au rapport
+## Reproductibilité
 
-README.md
-  Présentation générale du projet
+Le dépôt a vocation à contenir le code, les paramètres, les petites tables utiles et la documentation nécessaire pour comprendre et reproduire l’analyse, sans dupliquer les données brutes ni les sorties lourdes du pipeline.
